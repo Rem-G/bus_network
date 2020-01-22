@@ -24,11 +24,11 @@ class Line():
 
 			for stop in self.list_stops:
 				if stop.name == keys[0]:
-					stop.set_previous_stop(previous_stop)
+					stop.set_previous_stop(self.name, previous_stop)
 					stop.set_schedule(self.name, stops[keys[0]])
 
-					if previous_stop is not None:
-						previous_stop.set_next_stop(stop)
+					if previous_stop is not None:					
+						previous_stop.set_next_stop(self.name, stop)
 
 					self.set_stop(stop)
 
