@@ -1,24 +1,14 @@
-import time
 
 class Line():
 
-	def __init__(self, name, line_type, list_stops):
+	def __init__(self, name, hollidays, list_stops):
 		self.name = name
-		self.line_type = line_type #we -> weekend/vacances/jours fériés, reg -> semaine
+		self.hollidays = hollidays #True -> weekend/vacances/jours fériés, False -> semaine
 		self.stops = []
 		self.list_stops = list_stops
 
 	def set_stop(self, stop):
 		self.stops.append(stop)
-
-
-	def distance(self, time1, time2):
-		'''
-		'''
-		time_object1 = datetime.strptime(time1, '%H:%M:%S').time()
-		time_object2 = datetime.strptime(time1, '%H:%M:%S').time()
-
-		return time_object2 - time_object1
 
 	def create_stops_line(self, stops, previous_stop = None):
 		"""

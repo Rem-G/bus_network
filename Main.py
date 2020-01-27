@@ -70,6 +70,7 @@ def stops_line(name, line_type, file_path):
 
 			stops = [dest1 + common_stops, dest2 + common_stops]
 
+
 			stops1 = stops2 = elements(file_path, type_element)
 
 			for line in stops:
@@ -79,6 +80,10 @@ def stops_line(name, line_type, file_path):
 
 					if stop not in list(stops1.keys()):
 						del stops2[stop]
+
+			#Création de la fourche
+			del stops1[dest2[0]]
+			del stops2[dest1[0]]
 
 			stops_lines.append(stops1)
 			stops_lines.append(stops2)
@@ -112,6 +117,9 @@ def create_stops():
 def create_line(file_path, name, line_type):
 	stops = stops_line(name, line_type, file_path)
 	lines = list()
+
+	print(stops[0].keys())
+
 	if len(stops) >= 2 and type(stops) is list:
 		for stop in stops:
 			line = Line(name, line_type, list_stops)
@@ -129,20 +137,23 @@ list_stops, list_stops_name = create_stops()
 list_lines = list()
 
 ########Ligne 1
-list_lines.append(create_line(data_file_name[0], '1', 'reg'))
+list_lines.append(create_line(data_file_name[0], '1', False))
 
-create_line(data_file_name[0], '1', 'we')
+#Hollidays
+create_line(data_file_name[0], '1', True)
 
 #######Ligne 2
-list_lines.append(create_line(data_file_name[1], '2', 'reg'))
+list_lines.append(create_line(data_file_name[1], '2', False))
 
-create_line(data_file_name[1], '2', 'we')
+#Hollidays
+create_line(data_file_name[1], '2', True)
 
 #######Creation of the graph
 g = Graph(list_lines, list_stops, list_stops_name)
-print(g.fastest('Chorus', 'PARC_DES_GLAISINS', '09:20'))
-print(g.fastest('PARC_DES_GLAISINS', 'Chorus', '09:20'))
-print(g.fastest('GARE', 'PISCINE-PATINOIRE', '09:20'))
-print(g.fastest('POISY_COLLÈGE', 'PISCINE-PATINOIRE', '09:20'))
+#print(g.fastest('Chorus', 'PARC_DES_GLAISINS', '09:20'))
+#print(g.fastest('PARC_DES_GLAISINS', 'Chorus', '09:20'))
+#print(g.fastest('PISCINE-PATINOIRE', 'POISY_COLLÈGE', '09:20'))
+#print(g.fastest('POISY_COLLÈGE', 'PISCINE-PATINOIRE', '09:20'))
+print(g.fastest('POISY_COLLÈGE', 'LYCÉE_DE_POISY', '07:40'))
 
 

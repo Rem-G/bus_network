@@ -86,6 +86,7 @@ class Graph():
 
 	def fastest(self, departure_stop, arrival_stop, departure_time, journey_duration = '00:00'):
 		#print(self.direction(departure_stop, arrival_stop))
+		#print(departure_stop, departure_time)
 
 		if self.direction(departure_stop, arrival_stop) is 1:
 			departure_stop = self.stop_value(departure_stop)
@@ -96,13 +97,14 @@ class Graph():
 				self.departure_time = start_stop_schedule
 
 			if departure_stop.name == arrival_stop:
-				return [self.departure_time, arrival_stop, journey_duration]
+				return [self.departure_time, arrival_stop.upper(), journey_duration]
 
 			for line_group in self.lines:
 				for line in line_group:
 					if departure_stop in line.stops:
 						if len(departure_stop.next_stop.keys()) > 1  and self.stop_value(arrival_stop) not in line.stops: #common_stop
 							pass
+
 						else:
 							duration_to_next_stop = self.distance(start_stop_schedule, self.first_schedule(start_stop_schedule, departure_stop.next_stop[line.name]))
 
@@ -110,7 +112,6 @@ class Graph():
 
 							journey_duration = journey_duration[0] + ':' + journey_duration[1]
 
-							#print(start_stop.next_stop[line].name, end_stop, start_stop_schedule, journey_duration)
 							return self.fastest(departure_stop.next_stop[line.name].name, arrival_stop, start_stop_schedule, journey_duration)
 						
 		else:
@@ -122,12 +123,12 @@ class Graph():
 				self.departure_time = start_stop_schedule
 
 			if departure_stop.name == arrival_stop:
-				return [self.departure_time, arrival_stop, journey_duration]
+				return [self.departure_time, arrival_stop.upper(), journey_duration]
 
 			for line_group in self.lines:
 				for line in line_group:
 					if departure_stop in line.stops:
-						if len(departure_stop.previous_stop.keys()) > 1  and arrival_stop not in line.stops: #common_stop
+						if len(departure_stop.previous_stop.keys()) > 1  and self.stop_value(arrival_stop) not in line.stops: #common_stop
 							pass
 
 						else:
@@ -139,7 +140,6 @@ class Graph():
 
 							return self.fastest(departure_stop.previous_stop[line.name].name, arrival_stop, start_stop_schedule, journey_duration)
 					
-
 
 			# departure_stop = self.stop_value(departure_stop)
 			
