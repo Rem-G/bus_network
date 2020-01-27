@@ -52,44 +52,44 @@ def elements(file_path, type_element):
 		we_holidays_date_back = dates2dic(slited_content[5])
 		return we_holidays_date_back
 
-def distance(hour):
-	hour = hour.split(':')
-	return (hour[0]*60) + hour[1]
-
 def stops_line(name, line_type, file_path):
-	type_elements = 'regular_date_go'
+	type_elements = ['regular_date_go', 'regular_date_back']
+
+	stops_lines = list()
 
 	if line_type == 'we':
-		type_elements = 'we_holidays_date_go'
+		type_elements = ['we_holidays_date_go', 'we_holidays_date_back']
 
+	if '+' in elements(file_path, 'regular_path'):
+		for type_element in type_elements:
+			stops = elements(file_path, 'regular_path').split(' + ')
+			dest1 = [stops[0]]
+			dest2 = [stops[1].split(' N ')[0]]
 
-	stops = elements(file_path, 'regular_path')
+			common_stops = stops[1].split(' N ')[1:]
 
-	if '+' in stops:
-		stops = stops.split(' + ')
-		dest1 = [stops[0]]
-		dest2 = [stops[1].split(' N ')[0]]
+			stops = [dest1 + common_stops, dest2 + common_stops]
 
-		common_stops = stops[1].split(' N ')[1:]
+			stops1 = stops2 = elements(file_path, type_element)
 
-		stops = [dest1 + common_stops, dest2 + common_stops]
+			for line in stops:
+				for stop in line:
+					if stop not in list(stops1.keys()):
+						del stops1[stop]
 
-		stops1 = stops2 = elements(file_path, type_elements)
+					if stop not in list(stops1.keys()):
+						del stops2[stop]
 
-		for line in stops:
-			for stop in line:
-				if stop not in list(stops1.keys()):
-					del stops1[stop]
+			stops_lines.append(stops1)
+			stops_lines.append(stops2)
 
-				if stop not in list(stops1.keys()):
-					del stops2[stop]
-
-		return [stops1, stops2]
+		return stops_lines
 
 	else:
-		stops = elements(file_path, type_elements)
+		for type_element in type_elements:
+			stops_lines.append(elements(file_path, type_element))
 		
-	return stops
+	return stops_lines
 
 def create_stops():
 	list_stops = list()
@@ -131,4 +131,6 @@ create_line(data_file_name[1], '2', 'reg')
 create_line(data_file_name[1], '2', 'we')
 
 #######Creation of the graph
-Graph(list_lines, list_stops)
+g = Graph(list_lines, list_stops)
+print(g.fastest('Chorus', 'PARC_DES_GLAISINS', '09:20'))
+

@@ -1,3 +1,4 @@
+import time
 
 class Line():
 
@@ -10,10 +11,14 @@ class Line():
 	def set_stop(self, stop):
 		self.stops.append(stop)
 
-	def stops_name(self):
-		stops = list()
-		stops = [stop.name for stop in self.stops]
-		return stops
+
+	def distance(self, time1, time2):
+		'''
+		'''
+		time_object1 = datetime.strptime(time1, '%H:%M:%S').time()
+		time_object2 = datetime.strptime(time1, '%H:%M:%S').time()
+
+		return time_object2 - time_object1
 
 	def create_stops_line(self, stops, previous_stop = None):
 		"""
@@ -36,4 +41,5 @@ class Line():
 					del stops[keys[0]]
 
 					self.create_stops_line(stops, stop)
+
 
