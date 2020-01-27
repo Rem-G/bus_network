@@ -142,5 +142,7 @@ create_line(data_file_name[1], '2', 'we')
 g = Graph(list_lines, list_stops, list_stops_name)
 print(g.fastest('Chorus', 'PARC_DES_GLAISINS', '09:20'))
 print(g.fastest('PARC_DES_GLAISINS', 'Chorus', '09:20'))
+print(g.fastest('GARE', 'PISCINE-PATINOIRE', '09:20'))
+print(g.fastest('POISY_COLLÈGE', 'PISCINE-PATINOIRE', '09:20'))
 
 
