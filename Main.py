@@ -93,6 +93,7 @@ def stops_line(name, line_type, file_path):
 
 def create_stops():
 	list_stops = list()
+	list_stops_name = list()
 	stops = set()
 	for file in data_file_name:
 		list_stop = elements(file, 'regular_path').split(' + ')
@@ -103,34 +104,43 @@ def create_stops():
 
 	for stop in stops:
 		list_stops.append(Stop(stop))
+		list_stops_name.append(stop)
 
-	return list_stops
+
+	return [list_stops, list_stops_name]
 
 def create_line(file_path, name, line_type):
 	stops = stops_line(name, line_type, file_path)
+	lines = list()
 	if len(stops) >= 2 and type(stops) is list:
 		for stop in stops:
 			line = Line(name, line_type, list_stops)
 			line.create_stops_line(stop)
-			list_lines.append(line)
+			lines.append(line)
 	else:
 		line = Line(name, line_type, list_stops)
 		line.create_stops_line(stops)
-		list_lines.append(line)
+		lines.append(line)
+
+	return lines
 
 #######Creation of stops and lines
-list_stops = create_stops()
+list_stops, list_stops_name = create_stops()
 list_lines = list()
 
 ########Ligne 1
-create_line(data_file_name[0], '1', 'reg')
+list_lines.append(create_line(data_file_name[0], '1', 'reg'))
+
 create_line(data_file_name[0], '1', 'we')
 
 #######Ligne 2
-create_line(data_file_name[1], '2', 'reg')
+list_lines.append(create_line(data_file_name[1], '2', 'reg'))
+
 create_line(data_file_name[1], '2', 'we')
 
 #######Creation of the graph
-g = Graph(list_lines, list_stops)
+g = Graph(list_lines, list_stops, list_stops_name)
 print(g.fastest('Chorus', 'PARC_DES_GLAISINS', '09:20'))
+print(g.fastest('PARC_DES_GLAISINS', 'Chorus', '09:20'))
+
 
