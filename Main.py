@@ -81,8 +81,6 @@ def stops_line(name, hollidays, file_path):
 					if stop not in list(stops2.keys()):
 						del stops2[stop]
 
-			#stop_lines.append(stops1)
-
 			# #Création de la fourche
 			del stops1[dest1]
 			stop_lines.append(stops1)
@@ -100,7 +98,6 @@ def stops_line(name, hollidays, file_path):
 
 def create_stops():
 	list_stops = list()
-	list_stops_name = list()
 	stops = set()
 	for file in data_file_name:
 		list_stop = elements(file, 'regular_path').split(' + ')
@@ -121,13 +118,10 @@ def create_stops():
 			list_stops.append(left_stop)
 			list_stops.append(right_stop)
 
-			list_stops_name.append(stop)
-
 		elif stop != 'LYCÉE_DE_POISY' and stop != 'POISY_COLLÈGE':
 			list_stops.append(Stop(stop))
-			list_stops_name.append(stop)
 
-	return [list_stops, list_stops_name]
+	return list_stops
 
 def create_line(file_path, name, hollidays):
 	stops = stops_line(name, hollidays, file_path)
@@ -146,7 +140,7 @@ def create_line(file_path, name, hollidays):
 	return lines
 
 #######Creation of stops and lines
-list_stops, list_stops_name = create_stops()
+list_stops = create_stops()
 list_lines = list()
 
 ########Ligne 1
@@ -162,18 +156,21 @@ list_lines.append(create_line(data_file_name[1], '2', False))
 list_lines.append(create_line(data_file_name[1], '2', True))
 
 #######Creation of the graph
-g = Graph(list_lines, list_stops, list_stops_name)
-print(g.fastest('Chorus', 'PARC_DES_GLAISINS', False, '09:20'), '\n')
-print(g.fastest('PARC_DES_GLAISINS', 'Chorus', False, '09:20'), '\n')
-print(g.fastest('PISCINE-PATINOIRE', 'POISY_COLLÈGE', False, '09:20'), '\n')
-print(g.fastest('PISCINE-PATINOIRE', 'POISY_COLLÈGE', True, '09:20'), '\n')
-print(g.fastest('POISY_COLLÈGE', 'PISCINE-PATINOIRE', False, '09:20'), '\n')
-print(g.fastest('POISY_COLLÈGE', 'LYCÉE_DE_POISY', False, '09:20'), '\n')
-print(g.fastest('LYCÉE_DE_POISY', 'POISY_COLLÈGE', False, '09:20'), '\n')
-print(g.fastest('POISY_COLLÈGE', 'CAMPUS', False, '07:40'), '\n')
-print(g.fastest('LYCÉE_DE_POISY', 'CAMPUS', False, '07:40'), '\n')
-print(g.fastest('POISY_COLLÈGE', 'CAMPUS', True, '07:40'), '\n')
-print(g.fastest('LYCÉE_DE_POISY', 'CAMPUS', True, '07:40'), '\n')
+G = Graph(list_lines, list_stops)
+print(G.fastest('Chorus', 'PARC_DES_GLAISINS', False, '09:20'), '\n')
+print(G.fastest('PARC_DES_GLAISINS', 'Chorus', False, '09:20'), '\n')
+print(G.fastest('PISCINE-PATINOIRE', 'POISY_COLLÈGE', False, '09:20'), '\n')
+print(G.fastest('PISCINE-PATINOIRE', 'POISY_COLLÈGE', True, '09:20'), '\n')
+print(G.fastest('POISY_COLLÈGE', 'PISCINE-PATINOIRE', False, '09:20'), '\n')
+print(G.fastest('POISY_COLLÈGE', 'LYCÉE_DE_POISY', False, '09:20'), '\n')
+print(G.fastest('LYCÉE_DE_POISY', 'POISY_COLLÈGE', False, '09:20'), '\n')
+print(G.fastest('POISY_COLLÈGE', 'CAMPUS', False, '07:40'), '\n')
+print(G.fastest('LYCÉE_DE_POISY', 'CAMPUS', False, '07:40'), '\n')
+print(G.fastest('POISY_COLLÈGE', 'CAMPUS', True, '07:40'), '\n')
+print(G.fastest('LYCÉE_DE_POISY', 'CAMPUS', True, '07:40'), '\n')
+print(G.fastest('GARE', 'VIGNIÈRES', False, '07:40'), '\n')
+
+
 
 
 
