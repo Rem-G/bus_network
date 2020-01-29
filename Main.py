@@ -52,12 +52,12 @@ def elements(file_path, type_element):
 		we_holidays_date_back = dates2dic(slited_content[5])
 		return we_holidays_date_back
 
-def stops_line(name, line_type, file_path):
+def stops_line(name, hollidays, file_path):
 	type_elements = ['regular_date_go', 'regular_date_back']
 
 	stop_lines = list()
 
-	if line_type == 'we':
+	if hollidays is True:
 		type_elements = ['we_holidays_date_go', 'we_holidays_date_back']
 
 	if '+' in elements(file_path, 'regular_path'):
@@ -129,17 +129,17 @@ def create_stops():
 
 	return [list_stops, list_stops_name]
 
-def create_line(file_path, name, line_type):
-	stops = stops_line(name, line_type, file_path)
+def create_line(file_path, name, hollidays):
+	stops = stops_line(name, hollidays, file_path)
 	lines = list()
 
 	if len(stops) > 1 and type(stops) is list:
 		for stop in stops:
-			line = Line(name, line_type, list_stops)
+			line = Line(name, hollidays, list_stops)
 			line.create_stops_line(stop)
 			lines.append(line)
 	else:
-		line = Line(name, line_type, list_stops)
+		line = Line(name, hollidays, list_stops)
 		line.create_stops_line(stops)
 		lines.append(line)
 
@@ -163,16 +163,17 @@ list_lines.append(create_line(data_file_name[1], '2', True))
 
 #######Creation of the graph
 g = Graph(list_lines, list_stops, list_stops_name)
-print(g.fastest('Chorus', 'PARC_DES_GLAISINS', False, '09:20'))
-print(g.fastest('PARC_DES_GLAISINS', 'Chorus', False, '09:20'))
-print(g.fastest('PISCINE-PATINOIRE', 'POISY_COLLÈGE', False, '09:20'))
-print(g.fastest('POISY_COLLÈGE', 'PISCINE-PATINOIRE', False, '09:20'))
-print(g.fastest('POISY_COLLÈGE', 'LYCÉE_DE_POISY', False, '09:20'))
-print(g.fastest('LYCÉE_DE_POISY', 'POISY_COLLÈGE', False, '09:20'))
-print(g.fastest('POISY_COLLÈGE', 'CAMPUS', False, '07:40'))
-print(g.fastest('LYCÉE_DE_POISY', 'CAMPUS', False, '07:40'))
-print(g.fastest('POISY_COLLÈGE', 'CAMPUS', True, '07:40'))
-print(g.fastest('LYCÉE_DE_POISY', 'CAMPUS', True, '07:40'))
+print(g.fastest('Chorus', 'PARC_DES_GLAISINS', False, '09:20'), '\n')
+print(g.fastest('PARC_DES_GLAISINS', 'Chorus', False, '09:20'), '\n')
+print(g.fastest('PISCINE-PATINOIRE', 'POISY_COLLÈGE', False, '09:20'), '\n')
+print(g.fastest('PISCINE-PATINOIRE', 'POISY_COLLÈGE', True, '09:20'), '\n')
+print(g.fastest('POISY_COLLÈGE', 'PISCINE-PATINOIRE', False, '09:20'), '\n')
+print(g.fastest('POISY_COLLÈGE', 'LYCÉE_DE_POISY', False, '09:20'), '\n')
+print(g.fastest('LYCÉE_DE_POISY', 'POISY_COLLÈGE', False, '09:20'), '\n')
+print(g.fastest('POISY_COLLÈGE', 'CAMPUS', False, '07:40'), '\n')
+print(g.fastest('LYCÉE_DE_POISY', 'CAMPUS', False, '07:40'), '\n')
+print(g.fastest('POISY_COLLÈGE', 'CAMPUS', True, '07:40'), '\n')
+print(g.fastest('LYCÉE_DE_POISY', 'CAMPUS', True, '07:40'), '\n')
 
 
 

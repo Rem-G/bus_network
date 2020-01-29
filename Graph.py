@@ -7,7 +7,10 @@ class Graph():
 		self.stops_name = stops_name
 		self.departure_time = None
 		self.hollidays = False
+		self.departure_stop = None
 
+	def set_departure_stop(self, departure_stop):
+		self.departure_stop = departure_stop
 
 	def set_hollidays(self, hollidays):
 		self.hollidays = hollidays
@@ -95,6 +98,9 @@ class Graph():
 
 		self.set_hollidays(hollidays)
 
+		if self.departure_stop is None:
+			self.set_departure_stop(departure_stop)
+
 		direction = self.direction(departure_stop, arrival_stop)
 
 		#print(direction)
@@ -108,7 +114,9 @@ class Graph():
 				self.departure_time = start_stop_schedule
 
 			if departure_stop.name == arrival_stop:
-				return {'Departure time' : self.departure_time, 'Arrival stop' : arrival_stop.upper(), 'Journey duration' : journey_duration}
+				departure_stop = self.departure_stop
+				self.departure_stop = None
+				return {'Departure time' : self.departure_time, 'Departure stop' : departure_stop, 'Arrival stop' : arrival_stop.upper(), 'Hollidays' : self.hollidays, 'Journey duration' : journey_duration}
 
 			for line_group in self.lines:
 				for line in line_group:
@@ -148,7 +156,9 @@ class Graph():
 				self.departure_time = start_stop_schedule
 
 			if departure_stop.name == arrival_stop:
-				return {'Departure time' : self.departure_time, 'Arrival stop' : arrival_stop.upper(), 'Journey duration' : journey_duration}
+				departure_stop = self.departure_stop
+				self.departure_stop = None
+				return {'Departure time' : self.departure_time, 'Departure stop' : departure_stop, 'Arrival stop' : arrival_stop.upper(), 'Hollidays' : self.hollidays, 'Journey duration' : journey_duration}
 
 			for line_group in self.lines:
 				for line in line_group:
