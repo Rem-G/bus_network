@@ -55,7 +55,7 @@ def elements(file_path, type_element):
 def stops_line(name, line_type, file_path):
 	type_elements = ['regular_date_go', 'regular_date_back']
 
-	stops_lines = list()
+	stop_lines = list()
 
 	if line_type == 'we':
 		type_elements = ['we_holidays_date_go', 'we_holidays_date_back']
@@ -63,38 +63,40 @@ def stops_line(name, line_type, file_path):
 	if '+' in elements(file_path, 'regular_path'):
 		for type_element in type_elements:
 			stops = elements(file_path, 'regular_path').split(' + ')
-			dest1 = [stops[0]]
-			dest2 = [stops[1].split(' N ')[0]]
+			dest1 = stops[0]
+			dest2 = stops[1].split(' N ')[0]
 
-			common_stops = stops[1].split(' N ')[1:]
+			common_stops = [stops[1].split(' N ')[1:]]
 
-			stops = [dest1 + common_stops, dest2 + common_stops]
+			stops = [common_stops]
 
+			stops1 = elements(file_path, type_element)
+			stops2 = elements(file_path, type_element)
 
-			stops1 = stops2 = elements(file_path, type_element)
-
-			for line in stops:
+			for line in common_stops:
 				for stop in line:
 					if stop not in list(stops1.keys()):
 						del stops1[stop]
 
-					if stop not in list(stops1.keys()):
+					if stop not in list(stops2.keys()):
 						del stops2[stop]
 
-			#Création de la fourche
-			del stops1[dest2[0]]
-			del stops2[dest1[0]]
+			#stop_lines.append(stops1)
 
-			stops_lines.append(stops1)
-			stops_lines.append(stops2)
+			# #Création de la fourche
+			del stops1[dest1]
+			stop_lines.append(stops1)
 
-		return stops_lines
+			del stops2[dest2]
+			stop_lines.append(stops2)
+
+		return stop_lines
 
 	else:
 		for type_element in type_elements:
-			stops_lines.append(elements(file_path, type_element))
-		
-	return stops_lines
+			stop_lines.append(elements(file_path, type_element))
+
+	return stop_lines
 
 def create_stops():
 	list_stops = list()
@@ -108,9 +110,22 @@ def create_stops():
 				stops.add(e)
 
 	for stop in stops:
-		list_stops.append(Stop(stop))
-		list_stops_name.append(stop)
+		if stop == 'Vernod':
+			right_stop = Stop('LYCÉE_DE_POISY')
+			left_stop = Stop('POISY_COLLÈGE')
+			s = Stop(stop)
+			s.set_left_stop(left_stop)
+			s.set_right_stop(right_stop)
 
+			list_stops.append(s)
+			list_stops.append(left_stop)
+			list_stops.append(right_stop)
+
+			list_stops_name.append(stop)
+
+		elif stop != 'LYCÉE_DE_POISY' and stop != 'POISY_COLLÈGE':
+			list_stops.append(Stop(stop))
+			list_stops_name.append(stop)
 
 	return [list_stops, list_stops_name]
 
@@ -118,9 +133,7 @@ def create_line(file_path, name, line_type):
 	stops = stops_line(name, line_type, file_path)
 	lines = list()
 
-	print(stops[0].keys())
-
-	if len(stops) >= 2 and type(stops) is list:
+	if len(stops) > 1 and type(stops) is list:
 		for stop in stops:
 			line = Line(name, line_type, list_stops)
 			line.create_stops_line(stop)
@@ -140,20 +153,27 @@ list_lines = list()
 list_lines.append(create_line(data_file_name[0], '1', False))
 
 #Hollidays
-create_line(data_file_name[0], '1', True)
+list_lines.append(create_line(data_file_name[0], '1', True))
 
 #######Ligne 2
 list_lines.append(create_line(data_file_name[1], '2', False))
 
 #Hollidays
-create_line(data_file_name[1], '2', True)
+list_lines.append(create_line(data_file_name[1], '2', True))
 
 #######Creation of the graph
 g = Graph(list_lines, list_stops, list_stops_name)
-#print(g.fastest('Chorus', 'PARC_DES_GLAISINS', '09:20'))
-#print(g.fastest('PARC_DES_GLAISINS', 'Chorus', '09:20'))
-#print(g.fastest('PISCINE-PATINOIRE', 'POISY_COLLÈGE', '09:20'))
-#print(g.fastest('POISY_COLLÈGE', 'PISCINE-PATINOIRE', '09:20'))
-print(g.fastest('POISY_COLLÈGE', 'LYCÉE_DE_POISY', '07:40'))
+print(g.fastest('Chorus', 'PARC_DES_GLAISINS', False, '09:20'))
+print(g.fastest('PARC_DES_GLAISINS', 'Chorus', False, '09:20'))
+print(g.fastest('PISCINE-PATINOIRE', 'POISY_COLLÈGE', False, '09:20'))
+print(g.fastest('POISY_COLLÈGE', 'PISCINE-PATINOIRE', False, '09:20'))
+print(g.fastest('POISY_COLLÈGE', 'LYCÉE_DE_POISY', False, '09:20'))
+print(g.fastest('LYCÉE_DE_POISY', 'POISY_COLLÈGE', False, '09:20'))
+print(g.fastest('POISY_COLLÈGE', 'CAMPUS', False, '07:40'))
+print(g.fastest('LYCÉE_DE_POISY', 'CAMPUS', False, '07:40'))
+print(g.fastest('POISY_COLLÈGE', 'CAMPUS', True, '07:40'))
+print(g.fastest('LYCÉE_DE_POISY', 'CAMPUS', True, '07:40'))
+
+
 
 

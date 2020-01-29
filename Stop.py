@@ -5,6 +5,8 @@ class Stop():
 		self.schedule = {}
 		self.previous_stop = dict()
 		self.next_stop = dict()
+		self.left_stop = None
+		self.right_stop = None
 
 	def set_schedule(self, line, schedule):
 		self.schedule[line] = schedule
@@ -14,5 +16,11 @@ class Stop():
 
 	def set_previous_stop(self, line, previous_stop):
 		self.previous_stop[line] = previous_stop
+
+	def set_left_stop(self, left_stop):
+		self.left_stop = left_stop
+
+	def set_right_stop(self, right_stop):
+		self.right_stop = right_stop
 
 
