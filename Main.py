@@ -143,13 +143,13 @@ def create_line(file_path, name, hollidays):
 list_stops = create_stops()
 list_lines = list()
 
-########Ligne 1
+########Line 1
 list_lines.append(create_line(data_file_name[0], '1', False))
 
 #Hollidays
 list_lines.append(create_line(data_file_name[0], '1', True))
 
-#######Ligne 2
+#######Line 2
 list_lines.append(create_line(data_file_name[1], '2', False))
 
 #Hollidays
@@ -169,6 +169,10 @@ print(G.fastest('LYCÉE_DE_POISY', 'CAMPUS', False, '07:40'), '\n')
 print(G.fastest('POISY_COLLÈGE', 'CAMPUS', True, '07:40'), '\n')
 print(G.fastest('LYCÉE_DE_POISY', 'CAMPUS', True, '07:40'), '\n')
 print(G.fastest('GARE', 'VIGNIÈRES', False, '07:40'), '\n')
+
+
+print(G.shortest('Chorus', 'PARC_DES_GLAISINS', '07:40'))
+#print(G.shortest('PISCINE-PATINOIRE', 'POISY_COLLÈGE', '09:20'), '\n')
 
 
 

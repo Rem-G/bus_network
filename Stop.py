@@ -5,6 +5,7 @@ class Stop():
 		self.schedule = {}
 		self.previous_stop = dict()
 		self.next_stop = dict()
+		self.neighbords = [self.previous_stop, self.next_stop]
 		self.left_stop = None
 		self.right_stop = None
 

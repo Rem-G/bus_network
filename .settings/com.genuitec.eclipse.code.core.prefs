@@ -1,0 +1,5 @@
+customPatterns=true
+customValidation=true
+disabledBuilders=org.python.pydev.ast.builder.PyDevBuilder,
+eclipse.preferences.version=1
+patternsAdded=*.py,*.pyw,

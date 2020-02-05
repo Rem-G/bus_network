@@ -38,7 +38,7 @@ class Graph():
 		'''
 		for line in arrival_stop.schedule.keys():
 			for stop_time in arrival_stop.schedule[line]:
-				if stop_time != '-' and datetime.strptime(stop_time, '%H:%M') > datetime.strptime(departure_stop, '%H:%M'):
+				if stop_time != '-' and datetime.strptime(stop_time, '%H:%M') >= datetime.strptime(departure_stop, '%H:%M'):
 					return [stop_time, arrival_stop.schedule[line].index(stop_time)]
 
 	def common_stops(self):
@@ -92,7 +92,7 @@ class Graph():
 
 	def fastest(self, departure_stop, arrival_stop, hollidays, departure_time, journey_duration = '00:00'):
 		#print(self.direction(departure_stop, arrival_stop))
-		print(departure_stop, departure_time, journey_duration)
+		#print(departure_stop, departure_time, journey_duration)
 
 		self.set_hollidays(hollidays)
 
@@ -196,6 +196,61 @@ class Graph():
 								return self.fastest(departure_stop.previous_stop[line.name].name, arrival_stop, self.hollidays, start_stop_schedule, journey_duration)
 
 							return self.fastest(departure_stop.previous_stop[line.name].name, arrival_stop, self.hollidays, start_stop_schedule, journey_duration)
+
+
+
+	def hours_mins_to_seconds(self, time):
+		time = time.split(':')
+		return int(time[0])*3600 + int(time[1])*60
+
+
+	def shortest(self, departure_stop, arrival_stop, departure_time, dist = dict(), checked_stops = list(), path = list()):
+		if departure_stop == arrival_stop:
+			time = datetime.fromtimestamp(dist[arrival_stop]).strftime("%H:%M")
+			return {'Path': path, 'Duration' : time}
+
+		no_checked = dict()
+
+		departure_stop = self.stop_value(departure_stop)
+
+		start_stop_schedule, index_start_stop_schedule = self.first_schedule(departure_time, departure_stop)
+
+		if not len(checked_stops):
+			dist[departure_stop.name] = 0
+
+		for neighbord in departure_stop.neighbords:
+			for line in neighbord:
+				if neighbord[line] not in checked_stops and neighbord[line] is not None:
+					dist_neighbord = dist.get(neighbord[line], float('inf'))
+
+					n = 0
+
+					while neighbord[line].schedule[line][index_start_stop_schedule + n] == '-':
+						n += 1
+
+					potential_dist = dist[departure_stop.name] + (self.hours_mins_to_seconds(neighbord[line].schedule[line][index_start_stop_schedule + n]) - dist[departure_stop.name])
+
+					if potential_dist < dist_neighbord:
+						s = neighbord[line].name
+						dist[s] = potential_dist
+						if s not in path:
+							path.append(s)
+
+		checked_stops.append(departure_stop.name)
+
+		no_checked = dict()
+
+		for stop in self.stops:
+			if neighbord[line] is not None and stop.name not in checked_stops:
+				no_checked[stop.name] = dist.get(stop.name, float('inf'))
+
+		nearby_stop = min(no_checked, key = no_checked.get)
+
+		return self.shortest(nearby_stop, arrival_stop, departure_time, dist, checked_stops, path)
+
+
+
+
 
 
 
