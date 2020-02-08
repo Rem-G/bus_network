@@ -171,8 +171,8 @@ print(G.fastest('LYCÉE_DE_POISY', 'CAMPUS', True, '07:40'), '\n')
 print(G.fastest('GARE', 'VIGNIÈRES', False, '07:40'), '\n')
 
 
-print(G.shortest('Chorus', 'PARC_DES_GLAISINS', '07:40'))
-#print(G.shortest('PISCINE-PATINOIRE', 'POISY_COLLÈGE', '09:20'), '\n')
+#print(G.shortest('Chorus', 'PARC_DES_GLAISINS', '07:40'))
+print(G.shortest('PISCINE-PATINOIRE', 'Vernod', '09:20'), '\n')
 
 
 
