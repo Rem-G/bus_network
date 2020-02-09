@@ -53,6 +53,11 @@ def elements(file_path, type_element):
 		return we_holidays_date_back
 
 def stops_line(name, hollidays, file_path):
+	'''
+	:param hollidays bool: Hollidays period True/False
+	:param file_path str: path of the file to read
+	:return stop_lines list: List of lines with their stops and schedules
+	'''
 	type_elements = ['regular_date_go', 'regular_date_back']
 
 	stop_lines = list()
@@ -60,43 +65,16 @@ def stops_line(name, hollidays, file_path):
 	if hollidays is True:
 		type_elements = ['we_holidays_date_go', 'we_holidays_date_back']
 
-	if '+' in elements(file_path, 'regular_path'):
-		for type_element in type_elements:
-			stops = elements(file_path, 'regular_path').split(' + ')
-			dest1 = stops[0]
-			dest2 = stops[1].split(' N ')[0]
-
-			common_stops = [stops[1].split(' N ')[1:]]
-
-			stops = [common_stops]
-
-			stops1 = elements(file_path, type_element)
-			stops2 = elements(file_path, type_element)
-
-			for line in common_stops:
-				for stop in line:
-					if stop not in list(stops1.keys()):
-						del stops1[stop]
-
-					if stop not in list(stops2.keys()):
-						del stops2[stop]
-
-			# #Création de la fourche
-			del stops1[dest1]
-			stop_lines.append(stops1)
-
-			del stops2[dest2]
-			stop_lines.append(stops2)
-
-		return stop_lines
-
-	else:
-		for type_element in type_elements:
-			stop_lines.append(elements(file_path, type_element))
+	for type_element in type_elements:
+		stop_lines.append(elements(file_path, type_element))
 
 	return stop_lines
 
 def create_stops():
+	'''
+	Create stops objects
+	:return list: List of created stops
+	'''
 	list_stops = list()
 	stops = set()
 	for file in data_file_name:
@@ -106,6 +84,7 @@ def create_stops():
 			for e in s:
 				stops.add(e)
 
+	#FORK
 	for stop in stops:
 		if stop == 'Vernod':
 			right_stop = Stop('LYCÉE_DE_POISY')
@@ -124,14 +103,20 @@ def create_stops():
 	return list_stops
 
 def create_line(file_path, name, hollidays):
+	'''
+	:param file_path str: Path of the file to read
+	:param name str: Name of the file to create
+	:param hollidays bool: Hollidays period True/False
+	:return lines list: List of the created lines
+	'''
 	stops = stops_line(name, hollidays, file_path)
 	lines = list()
 
 	if len(stops) > 1 and type(stops) is list:
+		line = Line(name, hollidays, list_stops)
 		for stop in stops:
-			line = Line(name, hollidays, list_stops)
 			line.create_stops_line(stop)
-			lines.append(line)
+		lines.append(line)
 	else:
 		line = Line(name, hollidays, list_stops)
 		line.create_stops_line(stops)
@@ -160,7 +145,6 @@ G = Graph(list_lines, list_stops)
 print(G.fastest('Chorus', 'PARC_DES_GLAISINS', False, '09:20'), '\n')
 print(G.fastest('PARC_DES_GLAISINS', 'Chorus', False, '09:20'), '\n')
 print(G.fastest('PISCINE-PATINOIRE', 'POISY_COLLÈGE', False, '09:20'), '\n')
-print(G.fastest('PISCINE-PATINOIRE', 'POISY_COLLÈGE', True, '09:20'), '\n')
 print(G.fastest('POISY_COLLÈGE', 'PISCINE-PATINOIRE', False, '09:20'), '\n')
 print(G.fastest('POISY_COLLÈGE', 'LYCÉE_DE_POISY', False, '09:20'), '\n')
 print(G.fastest('LYCÉE_DE_POISY', 'POISY_COLLÈGE', False, '09:20'), '\n')
@@ -169,10 +153,17 @@ print(G.fastest('LYCÉE_DE_POISY', 'CAMPUS', False, '07:40'), '\n')
 print(G.fastest('POISY_COLLÈGE', 'CAMPUS', True, '07:40'), '\n')
 print(G.fastest('LYCÉE_DE_POISY', 'CAMPUS', True, '07:40'), '\n')
 print(G.fastest('GARE', 'VIGNIÈRES', False, '07:40'), '\n')
+print(G.fastest('Vernod', 'GARE', False, '15:00'), '\n')
+print(G.fastest('France_Barattes', 'GARE', False, '15:00'), '\n')
+
 
 
 #print(G.shortest('Chorus', 'PARC_DES_GLAISINS', '07:40'))
-print(G.shortest('PISCINE-PATINOIRE', 'Vernod', '09:20'), '\n')
+#print(G.shortest('PISCINE-PATINOIRE', 'Vernod', '09:20'), '\n')
+print(G.shortest('PISCINE-PATINOIRE', 'POISY_COLLÈGE', '09:20'), '\n')
+#print(G.shortest('GARE', 'VIGNIÈRES', '09:20'), '\n')
+
+
 
 
 
