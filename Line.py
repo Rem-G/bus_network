@@ -32,6 +32,3 @@ class Line():
 
 					self.create_stops_line(stops, stop)
 
-		print(self.list_stops == self.stops)
-
-

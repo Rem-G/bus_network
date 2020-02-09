@@ -145,6 +145,7 @@ class Graph():
 					'Journey duration' : journey_duration
 					}
 
+
 		if direction is 1:
 			for line_group in self.lines:
 				for line in line_group:
@@ -154,6 +155,9 @@ class Graph():
 
 						else:
 							duration_to_next_stop = self.distance(start_stop_schedule, departure_stop.next_stop[line.name].schedule[line.name][index_start_stop_schedule])
+							while duration_to_next_stop == '-':
+								index_start_stop_schedule += 1
+								duration_to_next_stop = self.distance(start_stop_schedule, departure_stop.next_stop[line.name].schedule[line.name][index_start_stop_schedule])
 
 							journey_duration = str(datetime.strptime(str(journey_duration), '%H:%M') + duration_to_next_stop).split(' ')[1].split(':')[:2]
 
@@ -183,6 +187,9 @@ class Graph():
 
 						else:
 							duration_to_next_stop = self.distance(start_stop_schedule, departure_stop.next_stop[line.name].schedule[line.name][index_start_stop_schedule])
+							while duration_to_next_stop == '-':
+								index_start_stop_schedule += 1
+								duration_to_next_stop = self.distance(start_stop_schedule, departure_stop.next_stop[line.name].schedule[line.name][index_start_stop_schedule])
 
 							journey_duration = str(datetime.strptime(str(journey_duration), '%H:%M') + duration_to_next_stop).split(' ')[1].split(':')[:2]
 

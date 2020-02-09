@@ -160,8 +160,9 @@ print(G.fastest('France_Barattes', 'GARE', False, '15:00'), '\n')
 
 #print(G.shortest('Chorus', 'PARC_DES_GLAISINS', '07:40'))
 #print(G.shortest('PISCINE-PATINOIRE', 'Vernod', '09:20'), '\n')
-print(G.shortest('PISCINE-PATINOIRE', 'POISY_COLLÈGE', '09:20'), '\n')
+#print(G.shortest('PISCINE-PATINOIRE', 'POISY_COLLÈGE', '09:20'), '\n')
 #print(G.shortest('GARE', 'VIGNIÈRES', '09:20'), '\n')
+print(G.shortest('POISY_COLLÈGE', 'PISCINE-PATINOIRE', '09:20'))
 
 
 
