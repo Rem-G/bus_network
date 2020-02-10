@@ -126,6 +126,9 @@ def create_line(file_path, name, hollidays, list_stops, go):
 	return lines
 
 def main():
+	'''
+	Create stops, lines, graph and call the function
+	'''
 
 	#######Creation of stops and lines
 	list_stops = create_stops()
@@ -182,6 +185,7 @@ def main():
 
 def display():
 	'''
+	Request user decision and display the result
 	'''
 	options_algo_user = {0 : 'Fastest', 1 : 'Shortest'}
 	stops_user = {0 : 'PARC_DES_GLAISINS', 1 : 'Ponchy', 2 : 'VIGNIÈRES', 3 : 'C.E.S._Barattes', 4 : 'France_Barattes', 5 : 'GARE', 6 : 'Mandallaz',
