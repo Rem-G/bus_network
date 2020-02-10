@@ -129,6 +129,8 @@ class Graph():
 		'''
 		self.set_hollidays(hollidays)
 
+		print(departure_stop, journey_duration)
+
 		if self.departure_stop is None:
 			self.set_departure_stop(departure_stop)
 
@@ -225,7 +227,7 @@ class Graph():
 		:param checked_stops list:
 		:param path list:
 		:param index_start_schedule int:
-		:return dict:
+		:return dict: 
 		'''
 		if departure_stop == arrival_stop:
 			time = datetime.fromtimestamp(dist - self.hours_mins_to_seconds(departure_time)).strftime("%H:%M")
