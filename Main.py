@@ -52,23 +52,24 @@ def elements(file_path, type_element):
 		we_holidays_date_back = dates2dic(slited_content[5])
 		return we_holidays_date_back
 
-def stops_line(name, hollidays, file_path):
+def stops_line(name, hollidays, file_path, go):
 	'''
 	:param hollidays bool: Hollidays period True/False
 	:param file_path str: path of the file to read
 	:return stop_lines list: List of lines with their stops and schedules
 	'''
-	type_elements = ['regular_date_go', 'regular_date_back']
-
-	stop_lines = list()
+	if go == 'go':
+		type_elements = 'regular_date_go'
+	else:
+		type_elements = 'regular_date_back'
 
 	if hollidays is True:
-		type_elements = ['we_holidays_date_go', 'we_holidays_date_back']
+		if go == 'go':
+			type_elements = 'we_holidays_date_go'
+		else:
+			type_elements = 'we_holidays_date_back'
 
-	for type_element in type_elements:
-		stop_lines.append(elements(file_path, type_element))
-
-	return stop_lines
+	return elements(file_path, type_elements)
 
 def create_stops():
 	'''
@@ -102,67 +103,113 @@ def create_stops():
 
 	return list_stops
 
-def create_line(file_path, name, hollidays):
+def create_line(file_path, name, hollidays, list_stops, go):
 	'''
 	:param file_path str: Path of the file to read
 	:param name str: Name of the file to create
 	:param hollidays bool: Hollidays period True/False
 	:return lines list: List of the created lines
 	'''
-	stops = stops_line(name, hollidays, file_path)
+	stops = stops_line(name, hollidays, file_path, go)
 	lines = list()
 
 	if len(stops) > 1 and type(stops) is list:
-		line = Line(name, hollidays, list_stops)
+		line = Line(name, hollidays, list_stops, go)
 		for stop in stops:
 			line.create_stops_line(stop)
 		lines.append(line)
 	else:
-		line = Line(name, hollidays, list_stops)
+		line = Line(name, hollidays, list_stops, go)
 		line.create_stops_line(stops)
 		lines.append(line)
 
 	return lines
 
-#######Creation of stops and lines
-list_stops = create_stops()
-list_lines = list()
+def main():
 
-########Line 1
-list_lines.append(create_line(data_file_name[0], '1', False))
+	#######Creation of stops and lines
+	list_stops = create_stops()
+	list_lines = list()
 
-#Hollidays
-list_lines.append(create_line(data_file_name[0], '1', True))
+	########Line 1
+	list_lines.append(create_line(data_file_name[0], '1', False, list_stops, 'go'))
+	list_lines.append(create_line(data_file_name[0], '1', False, list_stops, 'back'))
 
-#######Line 2
-list_lines.append(create_line(data_file_name[1], '2', False))
+	#Hollidays
+	list_lines.append(create_line(data_file_name[0], '1', True, list_stops, 'go'))
+	list_lines.append(create_line(data_file_name[0], '1', True, list_stops, 'back'))
 
-#Hollidays
-list_lines.append(create_line(data_file_name[1], '2', True))
+	#######Line 2
+	list_lines.append(create_line(data_file_name[1], '2', False, list_stops, 'go'))
+	list_lines.append(create_line(data_file_name[1], '2', False, list_stops, 'back'))
 
-#######Creation of the graph
-G = Graph(list_lines, list_stops)
-print(G.fastest('Chorus', 'PARC_DES_GLAISINS', False, '09:20'), '\n')
-print(G.fastest('PARC_DES_GLAISINS', 'Chorus', False, '09:20'), '\n')
-print(G.fastest('PISCINE-PATINOIRE', 'POISY_COLLÈGE', False, '09:20'), '\n')
-print(G.fastest('POISY_COLLÈGE', 'PISCINE-PATINOIRE', False, '09:20'), '\n')
-print(G.fastest('POISY_COLLÈGE', 'LYCÉE_DE_POISY', False, '09:20'), '\n')
-print(G.fastest('LYCÉE_DE_POISY', 'POISY_COLLÈGE', False, '09:20'), '\n')
-print(G.fastest('POISY_COLLÈGE', 'CAMPUS', False, '07:40'), '\n')
-print(G.fastest('LYCÉE_DE_POISY', 'CAMPUS', False, '07:40'), '\n')
-print(G.fastest('POISY_COLLÈGE', 'CAMPUS', True, '07:40'), '\n')
-print(G.fastest('LYCÉE_DE_POISY', 'CAMPUS', True, '07:40'), '\n')
-print(G.fastest('GARE', 'VIGNIÈRES', False, '07:40'), '\n')
-print(G.fastest('Vernod', 'GARE', False, '15:00'), '\n')
-print(G.fastest('France_Barattes', 'GARE', False, '15:00'), '\n')
+	#Hollidays
+	list_lines.append(create_line(data_file_name[1], '2', True, list_stops, 'go'))
+	list_lines.append(create_line(data_file_name[1], '2', True, list_stops, 'back'))
+
+	#######Creation of  graph
+	G = Graph(list_lines, list_stops)
+
+	option, departure_stop, arrival_stop, hollidays, departure_time = display()
+
+	if option == 'Fastest':
+		print('\n', G.fastest(departure_stop, arrival_stop, hollidays, departure_time))
+
+	elif option == 'Shortest':
+		print('\n', G.shortest(departure_stop, arrival_stop, departure_time))
+
+	#print(G.fastest('Chorus', 'PARC_DES_GLAISINS', False, '09:20'), '\n')
+	#print(G.fastest('PARC_DES_GLAISINS', 'Chorus', False, '09:20'), '\n')
+	#print(G.fastest('PISCINE-PATINOIRE', 'POISY_COLLÈGE', False, '09:20'), '\n')
+	#print(G.fastest('POISY_COLLÈGE', 'PISCINE-PATINOIRE', False, '09:20'), '\n')
+	#print(G.fastest('POISY_COLLÈGE', 'LYCÉE_DE_POISY', False, '09:20'), '\n')
+	#print(G.fastest('LYCÉE_DE_POISY', 'POISY_COLLÈGE', False, '09:20'), '\n')
+	#print(G.fastest('POISY_COLLÈGE', 'CAMPUS', False, '07:40'), '\n')
+	#print(G.fastest('LYCÉE_DE_POISY', 'CAMPUS', False, '07:40'), '\n')
+	#print(G.fastest('POISY_COLLÈGE', 'CAMPUS', True, '07:40'), '\n')
+	#print(G.fastest('LYCÉE_DE_POISY', 'CAMPUS', True, '07:40'), '\n')
+	#print(G.fastest('GARE', 'VIGNIÈRES', False, '07:40'), '\n')
+	#print(G.fastest('Vernod', 'GARE', False, '15:00'), '\n')
+	#print(G.fastest('France_Barattes', 'GARE', False, '15:00'), '\n')
 
 
 
-#print(G.shortest('Chorus', 'PARC_DES_GLAISINS', '07:40'))
-#print(G.shortest('PISCINE-PATINOIRE', 'Vernod', '09:20'), '\n')
-#print(G.shortest('PISCINE-PATINOIRE', 'POISY_COLLÈGE', '09:20'), '\n')
-#print(G.shortest('GARE', 'VIGNIÈRES', '09:20'), '\n')
-print(G.shortest('POISY_COLLÈGE', 'PISCINE-PATINOIRE', '09:20'))
+	#print(G.shortest('Chorus', 'PARC_DES_GLAISINS', '07:40'))
+	#print(G.shortest('PISCINE-PATINOIRE', 'Vernod', '09:20'), '\n')
+	#print(G.shortest('PISCINE-PATINOIRE', 'POISY_COLLÈGE', '09:20'), '\n')
+	#print(G.shortest('GARE', 'VIGNIÈRES', '09:20'), '\n')
+	#print(G.shortest('POISY_COLLÈGE', 'PISCINE-PATINOIRE', '09:20'))
+
+def display():
+	'''
+	'''
+	options_algo_user = {0 : 'Fastest', 1 : 'Shortest'}
+	stops_user = {0 : 'PARC_DES_GLAISINS', 1 : 'Ponchy', 2 : 'VIGNIÈRES', 3 : 'C.E.S._Barattes', 4 : 'France_Barattes', 5 : 'GARE', 6 : 'Mandallaz',
+	7 : 'Chorus', 8 : 'Meythet_Le_Rabelais', 9 : 'Vernod', 10 : 'POISY_COLLÈGE' , 11 : 'LYCÉE_DE_POISY', 12 : 'CAMPUS' , 13 : 'Pommaries',
+	14 : 'Impérial', 15 : 'Préfecture_Pâquier' , 16 : 'Bonlieu' , 17 : 'Courier', 18 : 'Place_des_Romains', 19 : 'Parc_des_Sports', 20 : 'Arcadium',
+	21 : 'PISCINE-PATINOIRE'}
+
+	print(options_algo_user)
+	option = options_algo_user[int(input('Please choose a search algorithm : '))]
+
+	print('\n', stops_user, '\n')
+	departure_stop = stops_user[int(input('Please choose a departure stop : '))]
+	arrival_stop = stops_user[int(input('Please choose an arrival stop : '))]
+
+	hollidays = input('Are you on hollidays ? y/n : ')
+
+	if hollidays == 'y':
+		hollidays = True
+	else:
+		hollidays = False
+
+	departure_time = input('When do you want to go ? HH:MM : ')
+
+	return [option, departure_stop, arrival_stop, hollidays, departure_time]
+
+if __name__ == "__main__":
+    main()
+
 
 
 

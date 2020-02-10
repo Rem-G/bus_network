@@ -1,11 +1,12 @@
 
 class Line():
 
-	def __init__(self, name, hollidays, list_stops):
+	def __init__(self, name, hollidays, list_stops, go):
 		self.name = name
 		self.hollidays = hollidays #True -> weekend/vacances/jours fériés, False -> semaine
 		self.stops = []
 		self.list_stops = list_stops
+		self.go = go
 
 	def set_stop(self, stop):
 		self.stops.append(stop)

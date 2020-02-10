@@ -24,10 +24,10 @@ class Graph():
 			d = datetime.strptime('00:00', '%H:%M')
 			return d - d
 
-		time_object1 = datetime.strptime(time1, '%H:%M')
-		time_object2 = datetime.strptime(time2, '%H:%M')
+		datetime1 = datetime.strptime(time1, '%H:%M')
+		datetime2 = datetime.strptime(time2, '%H:%M')
 
-		return time_object2 - time_object1
+		return datetime2 - datetime1
 
 	def stop_value(self, stop_name):
 		'''
@@ -112,6 +112,12 @@ class Graph():
 					return 1
 				return -1
 
+	def neighbord(self, stop, line, element, direction):
+		if direction is 1:
+			return stop.next_stop[line.name]
+		else:
+			return stop.previous_stop[line.nae]
+
 	def fastest(self, departure_stop, arrival_stop, hollidays, departure_time, journey_duration = '00:00'):
 		'''
 		:param departure_stop str:
@@ -145,11 +151,10 @@ class Graph():
 					'Journey duration' : journey_duration
 					}
 
-
 		if direction is 1:
 			for line_group in self.lines:
 				for line in line_group:
-					if departure_stop in line.stops and self.hollidays is line.hollidays:
+					if line.go == 'go' and departure_stop in line.stops and self.hollidays is line.hollidays:
 						if len(departure_stop.next_stop.keys()) > 1  and self.stop_value(arrival_stop) not in line.stops: #common_stop
 							pass
 
@@ -181,7 +186,7 @@ class Graph():
 		else:
 			for line_group in self.lines:
 				for line in line_group:
-					if departure_stop in line.stops and self.hollidays is line.hollidays:
+					if line.go == 'back' and departure_stop in line.stops and self.hollidays is line.hollidays:
 						if len(departure_stop.previous_stop.keys()) > 1  and self.stop_value(arrival_stop) not in line.stops: #common_stop
 							pass
 
